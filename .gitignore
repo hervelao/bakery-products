@@ -1,2 +1,6 @@
 data
 kaggle-solutions
+notebooks
+.DS_Store
+.ipynb_checkpoints
+__pycache__
