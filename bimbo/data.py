@@ -1,12 +1,11 @@
 import os
 import pandas as pd
 
-
-class Bimbo:
+class Bimbo():
 
     def get_data(self):
         """
-        01-01 > This function returns all Bimbo datasets
+        This function returns all Bimbo data sets
         as DataFrames within a Python dict.
         """
         data_dict = {}
@@ -17,3 +16,4 @@ class Bimbo:
 
 if __name__ == '__main__':
     bimbo = Bimbo()
+    print(olist.get_data())
