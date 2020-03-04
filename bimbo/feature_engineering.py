@@ -1,118 +1,117 @@
 import numpy as np
 import pandas as pd
-from random import *
 
-def change_type2cate(train_x):
+def change_type_to_categ(df_):
     """
-    Change the features [Agencia_ID' , 'Canal_ID' , 'Ruta_SAK' , 'Cliente_ID' ,
+    Change the features [Agencia_ID' ,'Canal_ID' ,'Ruta_SAK' ,'Cliente_ID' ,
     'Producto_ID'] into categories
     """
-    colname = ['Agencia_ID' , 'Canal_ID' , 'Ruta_SAK' ,
-           'Cliente_ID' , 'Producto_ID'  ]
+    colname = ['Agencia_ID', 'Canal_ID', 'Ruta_SAK', 'Cliente_ID' ,'Producto_ID']
     for col in colname:
-        train_x[col] = train_x[col].astype('category')
+        df_[col] = df_[col].astype('category')
 
-    return train_x
+    return df_
 
-def feature_engineering(train_x):
+def feature_engineering(df_):
     """
     This function does the feature engineering.
-    Mostly we aggregate the existent features to get the mean.
-    Indeed, we need XGBoost to capture the time series nature of the data,
-    and this is the way.
+
     """
-    mean_due_age = train_x.groupby(['Agencia_ID'], as_index=False)['log_demanda_uni_equil'].agg({'mean_due_age':np.mean})
-    mean_due_can = train_x.groupby(['Canal_ID'], as_index=False)['log_demanda_uni_equil'].agg({'mean_due_can':np.mean})
-    mean_due_rut = train_x.groupby(['Ruta_SAK'], as_index=False)['log_demanda_uni_equil'].agg({'mean_due_rut':np.mean})
-    mean_due_cli = train_x.groupby(['Cliente_ID'], as_index=False)['log_demanda_uni_equil'].agg({'mean_due_cli':np.mean})
-    mean_due_pro = train_x.groupby(['Producto_ID'], as_index=False)['log_demanda_uni_equil'].agg({'mean_due_pro':np.mean})
+    mean_due_agencia = df_.groupby(['Agencia_ID'], as_index=False)['log_demanda_uni_equil'].agg({'mean_due_agencia':np.mean})
+    mean_due_canal = df_.groupby(['Canal_ID'], as_index=False)['log_demanda_uni_equil'].agg({'mean_due_canal':np.mean})
+    mean_due_ruta = df_.groupby(['Ruta_SAK'], as_index=False)['log_demanda_uni_equil'].agg({'mean_due_ruta':np.mean})
+    mean_due_cliente = df_.groupby(['Cliente_ID'], as_index=False)['log_demanda_uni_equil'].agg({'mean_due_cliente':np.mean})
+    mean_due_producto = df_.groupby(['Producto_ID'], as_index=False)['log_demanda_uni_equil'].agg({'mean_due_producto':np.mean})
 
-    mean_vh_age = train_x.groupby(['Agencia_ID'], as_index=False)['log_venta_hoy'].agg({'mean_vh_age':np.mean})
+    mean_vh_agencia = df_.groupby(['Agencia_ID'], as_index=False)['log_venta_hoy'].agg({'mean_vh_agencia':np.mean})
 
-    mean_due_pa = train_x.groupby(['Producto_ID','Agencia_ID'], as_index=False)['log_demanda_uni_equil'].agg({'mean_due_pa':np.mean})
-    mean_due_pr = train_x.groupby(['Producto_ID','Ruta_SAK'], as_index=False)['log_demanda_uni_equil'].agg({'mean_due_pr':np.mean})
-    mean_due_pcli = train_x.groupby(['Producto_ID','Cliente_ID'], as_index=False)['log_demanda_uni_equil'].agg({'mean_due_pcli':np.mean})
-    mean_due_pcan = train_x.groupby(['Producto_ID','Canal_ID'], as_index=False)['log_demanda_uni_equil'].agg({'mean_due_pcan':np.mean})
+    mean_due_prod_age = df_.groupby(['Producto_ID','Agencia_ID'], as_index=False)['log_demanda_uni_equil'].agg({'mean_due_prod_age':np.mean})
+    mean_due_prod_rut = df_.groupby(['Producto_ID','Ruta_SAK'], as_index=False)['log_demanda_uni_equil'].agg({'mean_due_prod_rut':np.mean})
+    mean_due_prod_cli = df_.groupby(['Producto_ID','Cliente_ID'], as_index=False)['log_demanda_uni_equil'].agg({'mean_due_prod_cli':np.mean})
+    mean_due_prod_can = df_.groupby(['Producto_ID','Canal_ID'], as_index=False)['log_demanda_uni_equil'].agg({'mean_due_prod_can':np.mean})
 
-    mean_due_pca = train_x.groupby(['Producto_ID','Cliente_ID','Agencia_ID'], as_index=False)
-    mean_due_pca = mean_due_pca['log_demanda_uni_equil'].agg({'mean_due_pca':np.mean})
+    mean_due_prod_cli_age = df_.groupby(['Producto_ID','Cliente_ID','Agencia_ID'], as_index=False)
+    mean_due_prod_cli_age = mean_due_prod_cli_age['log_demanda_uni_equil'].agg({'mean_due_prod_cli_age':np.mean})
 
-    mean_due_acrcp = train_x.groupby(['Agencia_ID','Canal_ID','Ruta_SAK','Cliente_ID','Producto_ID'], as_index=False)
+    mean_due_acrcp = df_.groupby(['Agencia_ID','Canal_ID','Ruta_SAK','Cliente_ID','Producto_ID'], as_index=False)
     mean_due_acrcp = mean_due_acrcp['log_demanda_uni_equil'].agg({'mean_due_acrcp':np.mean})
-    sd_due_acrcp = train_x.groupby(['Agencia_ID','Canal_ID','Ruta_SAK','Cliente_ID','Producto_ID'], as_index=False)
-    sd_due_acrcp = sd_due_acrcp['log_demanda_uni_equil'].agg({'sd_due_acrcp':np.std})
 
-    temp = [ mean_due_age,
-            mean_due_can,
-            mean_due_rut ,
-            mean_due_cli ,
-            mean_due_pro ,
-            mean_due_pa,
-            mean_due_pr,
-            mean_due_pcli,
-            mean_due_pcan,
-            mean_due_pca,
-            mean_vh_age,
+    std_due_acrcp = df_.groupby(['Agencia_ID','Canal_ID','Ruta_SAK','Cliente_ID','Producto_ID'], as_index=False)
+    std_due_acrcp = std_due_acrcp['log_demanda_uni_equil'].agg({'std_due_acrcp':np.std})
+
+    """
+    ADD AS MANY FEATURES AS WANTED
+    """
+
+    # List of 13 new features, but more can be created
+    temp = [mean_due_agencia,
+            mean_due_canal,
+            mean_due_ruta,
+            mean_due_cliente,
+            mean_due_producto,
+            mean_vh_agencia,
+            mean_due_prod_age,
+            mean_due_prod_rut,
+            mean_due_prod_cli,
+            mean_due_prod_can,
+            mean_due_prod_cli_age,
             mean_due_acrcp,
-            sd_due_acrcp]
+            std_due_acrcp]
 
     return temp
 
-def merge_feature(y, temp, val_or_test):
+def merge_feature(df_, temp, val_or_test):
     """
     Merging the different features created with the target
     """
-    mean_due_age    = temp[0]
-    mean_due_can    = temp[1]
-    mean_due_rut    = temp[2]
-    mean_due_cli    = temp[3]
-    mean_due_pro    = temp[4]
-    mean_due_pa     = temp[5]
-    mean_due_pr     = temp[6]
-    mean_due_pcli   = temp[7]
-    mean_due_pcan   = temp[8]
-    mean_due_pca    = temp[9]
-    mean_vh_age     = temp[10]
-    mean_due_acrcp  = temp[11]
-    sd_due_acrcp    = temp[12]
+    mean_due_agencia = temp[0]
+    mean_due_canal = temp[1]
+    mean_due_ruta = temp[2]
+    mean_due_cliente = temp[3]
+    mean_due_producto = temp[4]
+    mean_vh_agencia = temp[5]
+    mean_due_prod_age = temp[6]
+    mean_due_prod_rut = temp[7]
+    mean_due_prod_cli = temp[8]
+    mean_due_prod_can = temp[9]
+    mean_due_prod_cli_age = temp[10]
+    mean_due_acrcp = temp[11]
+    std_due_acrcp = temp[12]
 
+    # it should give an error if we don't have the following columns
     if val_or_test == 'val':
-        seed(100)
-        merged_df = y
-        colname = ['Agencia_ID' , 'Canal_ID' , 'Ruta_SAK' ,
-                   'Cliente_ID' , 'Producto_ID'  ,
+        merged_df = df_
+        colname = ['Agencia_ID', 'Canal_ID' , 'Ruta_SAK',
+                   'Cliente_ID', 'Producto_ID',
                    'Demanda_uni_equil', 'log_demanda_uni_equil']
         merged_df = merged_df[colname]
 
-    elif val_or_test == 'test':
-        merged_df = y
+    # it should give an error if we don't have the following columns
+    if val_or_test == 'test':
+        merged_df = df_
         colname = ['Agencia_ID' , 'Canal_ID' , 'Ruta_SAK' ,
-                   'Cliente_ID' , 'Producto_ID'  ]
+                   'Cliente_ID' , 'Producto_ID']
+        merged_df = merged_df[colname]
 
-    merged_df = pd.merge(merged_df, mean_due_age,how = 'left', on='Agencia_ID')
-
-    merged_df = pd.merge(merged_df, mean_due_can,how = 'left', on='Canal_ID')
-    merged_df = pd.merge(merged_df, mean_due_rut,how = 'left', on='Ruta_SAK')
-    merged_df = pd.merge(merged_df, mean_due_cli,how = 'left', on='Cliente_ID')
-
-
-    merged_df = pd.merge(merged_df , mean_due_pa, how = 'left', on = ["Producto_ID", "Agencia_ID"])
-    merged_df = pd.merge(merged_df , mean_due_pr, how = 'left', on = ["Producto_ID", "Ruta_SAK"])
-    merged_df = pd.merge(merged_df , mean_due_pcli, how = 'left', on = ["Producto_ID", "Cliente_ID"])
-    merged_df = pd.merge(merged_df , mean_due_pcan, how = 'left', on = ["Producto_ID", "Canal_ID"])
-
-    merged_df = pd.merge(merged_df , mean_due_pca, how = 'left',
+    # Merge all the newly created features
+    merged_df = pd.merge(merged_df, mean_due_agencia, how = 'left', on='Agencia_ID')
+    merged_df = pd.merge(merged_df, mean_due_canal, how = 'left', on='Canal_ID')
+    merged_df = pd.merge(merged_df, mean_due_ruta, how = 'left', on='Ruta_SAK')
+    merged_df = pd.merge(merged_df, mean_due_cliente, how = 'left', on='Cliente_ID')
+    merged_df = pd.merge(merged_df , mean_due_prod_age, how = 'left', on = ["Producto_ID", "Agencia_ID"])
+    merged_df = pd.merge(merged_df , mean_due_prod_rut, how = 'left', on = ["Producto_ID", "Ruta_SAK"])
+    merged_df = pd.merge(merged_df , mean_due_prod_cli, how = 'left', on = ["Producto_ID", "Cliente_ID"])
+    merged_df = pd.merge(merged_df , mean_due_prod_can, how = 'left', on = ["Producto_ID", "Canal_ID"])
+    merged_df = pd.merge(merged_df , mean_due_prod_cli_age, how = 'left',
                     on = ["Producto_ID", "Cliente_ID", "Agencia_ID"])
-
-    merged_df = pd.merge(merged_df , mean_vh_age, how = 'left', on = ["Agencia_ID"])
-    merged_df = pd.merge(merged_df , sd_due_acrcp, how = 'left',
+    merged_df = pd.merge(merged_df , mean_vh_agencia, how = 'left', on = ["Agencia_ID"])
+    merged_df = pd.merge(merged_df , std_due_acrcp, how = 'left',
                     on = ["Producto_ID", "Cliente_ID", "Agencia_ID",    "Canal_ID" , "Ruta_SAK"])
-
     merged_df = pd.merge(merged_df , mean_due_acrcp, how = 'left',
                     on = ["Producto_ID", "Cliente_ID", "Agencia_ID",    "Canal_ID" , "Ruta_SAK"])
 
+    # Now we can drop the categories. We no longer need them
     colname = ['Agencia_ID' , 'Canal_ID' , 'Ruta_SAK' , 'Cliente_ID' , 'Producto_ID']
-
     merged_df.drop(colname, axis=1, inplace=True)
 
     return merged_df
