@@ -1,34 +1,20 @@
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
-import copy
-"""
-A shallow copy constructs a new compound object and then (to the extent possible) inserts references into it to the objects found in the original.
-
-A deep copy constructs a new compound object and then, recursively, inserts copies into it of the objects found in the original.
-===> deep copy copies everything but it may copy too much, such as data which is intended to be shared between copies.
-    - keep a “memo” dictionary of objects
-    - let user-defined classes override the copying operation or the set of components copied.
-"""
 from xgboost import XGBRegressor
 import pickle
 
-def build_model_1(val_X, val_y, name_model):
+def build_model(X, y):
     """
     Build the first model
     """
 
-    X_train, X_val, y_train, y_val = train_test_split(val_X, val_y,
+    X_train, X_val, y_train, y_val = train_test_split(X, y,
         test_size=0.5, random_state=42)
 
-    # model = XGBRegressor(
-    #     max_depth=8,
-    #     n_estimators=1000,
-    #     min_child_weight=300,
-    #     colsample_bytree=0.8,
-    #     subsample=0.8,
-    #     eta=0.3,
-    #     seed=42)
+    # We don't need Demanda_uni_equil in the features, so we can drop them now
+    X_train.drop(['Demanda_uni_equil'], axis=1, inplace=True)
+    X_val.drop(['Demanda_uni_equil'], axis=1, inplace=True)
 
     model = XGBRegressor(
                  base_score=0.5,
@@ -39,7 +25,7 @@ def build_model_1(val_X, val_y, name_model):
                  eta=0.3,
                  gamma=0,
                  importance_type='gain',
-                 learning_rate=0.3,
+                 learning_rate=0.1, #for model_2, 0.1
                  max_delta_step=0,
                  max_depth=7,
                  min_child_weight=300,
@@ -64,14 +50,25 @@ def build_model_1(val_X, val_y, name_model):
         eval_metric="rmse",
         eval_set=[(X_train, y_train), (X_val, y_val)],
         verbose=True,
-        early_stopping_rounds = 1)
+        early_stopping_rounds = 2) #for model_2, only 1
 
-    # save model to file
-    pickle.dump(model, open("../serialize-models/{name_model}.pickle.dat", "wb"))
-    print("Saved model to: {name_model}.pickle.dat")
+    return model
 
-    y_pred = model.predict(processed_test_df)
-    y_pred_exp = np.expm1(y_pred).round().astype(int)
+def save_model(model, model_name):
+    """
+    Saving the model using pickle
+    """
+    pickle.dump(model, open(f"../serialize-models/{model_name}.pickle.dat", "wb"))
+    print(f"Saved model to: {model_name}.pickle.dat")
 
-    return y_pred, y_pred_exp
-
+def submit_model(processed_test_df, model, csv_name):
+    """
+    Create a dataframe usable for the submission in Kaggle
+    """
+    log_y_pred = model.predict(processed_test_df)
+    final_predictions = np.expm1(log_y_pred).round().astype(int)
+    # Create the CSV
+    submit_df = pd.DataFrame( {'id':range(len(final_predictions)),
+           'Demanda_uni_equil':final_predictions} )
+    submit_df.to_csv(f"../data/{csv_name}.csv",index=False)
+    return submit_df
