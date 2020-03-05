@@ -47,7 +47,7 @@ def build_model(X, y):
     model.fit(
         X_train,
         y_train,
-        eval_metric="rmse",
+        eval_metric=["rmse", "rmsle", "mae", "logloss"], # only "rmse" previously
         eval_set=[(X_train, y_train), (X_val, y_val)],
         verbose=True,
         early_stopping_rounds = 2) #for model_2, only 1
@@ -56,10 +56,19 @@ def build_model(X, y):
 
 def save_model(model, model_name):
     """
-    Saving the model using pickle
+    Save the model using pickle
     """
     pickle.dump(model, open(f"../serialize-models/{model_name}.pickle.dat", "wb"))
     print(f"Saved model to: {model_name}.pickle.dat")
+
+def load_model(model_name):
+    """
+    Load the model using pickle
+    """
+    loaded_model = pickle.load(open(f"../serialize-models/{model_name}.pickle.dat", "rb"))
+    print("Loaded model from: pima.pickle.dat")
+    return loaded_model
+
 
 def submit_model(processed_test_df, model, csv_name):
     """
