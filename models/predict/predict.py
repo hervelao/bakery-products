@@ -45,15 +45,22 @@ def predict_json(project, model, instances, version=None):
         raise RuntimeError(response['error'])
     return response['predictions']
 
+# get data
 df = get_test_data().head(100) # only predict for first 100 rows
+
+# apply preprocess
 X_test, y_test = preprocess(df)
+
+# convert X_test to json
 instances = convert_to_json_instances(X_test)
+
+# send request and get response
 results = predict_json(project=PROJECT_ID,
     model=BUCKET_MODEL_NAME,
     version=BUCKET_MODEL_VERSION,
     instances=instances)
 
-print(df)
+print(results)
 
 #     id  Semana  Agencia_ID  Canal_ID  Ruta_SAK  Cliente_ID  Producto_ID
 # 0    0      11        4037         1      2209     4639078        35305

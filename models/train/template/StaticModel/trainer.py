@@ -57,7 +57,14 @@ def save_model(model):
     blob.upload_from_filename(local_model_name)
     print('model uploaded')
 
+# retrieve data
 df = get_data()
+
+# get X and y
 X_train, y_train = preprocess(df)
+
+# retrieve model
 model = train_model(X_train, y_train)
+
+# dump model and upload to gcp
 save_model(model)
