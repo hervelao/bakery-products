@@ -25,7 +25,7 @@ def build_model(X, y):
                  eta=0.3,
                  gamma=0,
                  importance_type='gain',
-                 learning_rate=0.1, #for model_2, 0.1
+                 learning_rate=0.1, #for model_1 & model_2, 0.1
                  max_delta_step=0,
                  max_depth=7,
                  min_child_weight=300,
@@ -33,33 +33,42 @@ def build_model(X, y):
                  n_estimators=1000,
                  n_jobs=1,
                  nthread=None,
-                 objective='reg:linear',
+                 objective='reg:squarederror', # for model_1 & model_2, reg:linear
                  random_state=0,
                  reg_alpha=0,
                  reg_lambda=1,
                  scale_pos_weight=1,
                  seed=42,
                  silent=None,
-                 subsample=0.7,
+                 subsample=0.8,
                  verbosity=1
              )
 
     model.fit(
         X_train,
         y_train,
-        eval_metric="rmse",
+        eval_metric=["mae", "rmse"], # # for model_1 & model_2, "rmse"
         eval_set=[(X_train, y_train), (X_val, y_val)],
         verbose=True,
-        early_stopping_rounds = 2) #for model_2, only 1
+        early_stopping_rounds = 1) #for model_1 & model_2, only 1 ||| model_3, 3
 
     return model
 
 def save_model(model, model_name):
     """
-    Saving the model using pickle
+    Save the model using pickle
     """
     pickle.dump(model, open(f"../serialize-models/{model_name}.pickle.dat", "wb"))
     print(f"Saved model to: {model_name}.pickle.dat")
+
+def load_model(model_name):
+    """
+    Load the model using pickle
+    """
+    loaded_model = pickle.load(open(f"../serialize-models/{model_name}.pickle.dat", "rb"))
+    print("Loaded model from: pima.pickle.dat")
+    return loaded_model
+
 
 def submit_model(processed_test_df, model, csv_name):
     """
