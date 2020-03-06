@@ -13,7 +13,7 @@ BUCKET_JOB_FOLDER=trainings
 JOB_NAME=static_model_$(shell date +'%Y%m%d_%H%M%S')
 
 # package folder name
-PACKAGE_NAME=StaticModel
+PACKAGE_NAME=Model2Weeks
 # package file namme
 FILENAME=trainer
 
@@ -21,14 +21,7 @@ FILENAME=trainer
 REGION=europe-west1
 PYTHON_VERSION=3.7
 RUNTIME_VERSION=1.15
-FRAMEWORK=scikit-learn
-
-#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
-#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
-# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-#
-# my, my, is this not a nice comment
-#
+FRAMEWORK=xgboost
 
 # auth to gcp
 auth:

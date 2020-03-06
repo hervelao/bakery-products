@@ -1,24 +1,27 @@
-import os
-import datetime
-
 import numpy as np
 import pandas as pd
 
 from google.cloud import storage
-
-from sklearn.externals import joblib
-from xgboost import XGBRegressor
+import googleapiclient.discovery
 
 PROJECT_ID='le-wagon-data-grupo-bimbo'            # gcp project id
 BUCKET_NAME='wagon-data-grupo-bimbo-sales'        # gcp bucket name
 
 BUCKET_DATA_PATH='data'                           # data folder
+BUCKET_DATA_TEST_PATH='data/test_10k.csv'         # test csv path
 BUCKET_DATA_TRAIN_PATH='data/train.csv'      # train csv path
 
-BUCKET_MODEL_PATH='models'                        # models folder
-BUCKET_MODEL_NAME='gab_week_2'                    # model name
+BUCKET_MODEL_NAME='static_baseline_fixed_response_4'        # model name
 BUCKET_MODEL_VERSION='v_1'                        # will store model.joblib
-BUCKET_MODEL_DUMP_NAME='model.joblib'             # required dump name (do not change this)
+
+def get_test_data():
+    '''retrieve test data from bucket'''
+    client = storage.Client()
+    df = pd.read_csv("gs://{}/{}".format(
+            BUCKET_NAME,
+            BUCKET_DATA_TEST_PATH),
+        nrows=1000)
+    return df
 
 def get_data():
     '''retrieve train data from bucket'''
@@ -27,8 +30,11 @@ def get_data():
             BUCKET_DATA_TRAIN_PATH))
     return df
 
-def preprocess(df):
+def preprocess(df_test, df_train):
     '''process X and y from data and preprocess data'''
+    '''preprocess should be identical to the one used on train data'''
+    '''actually preprocess is not identical'''
+    df = pd.concat([df_train, df_test]).drop('id', axis=1)
 
     '''PHASE1 - group data at the prediction level'''
     prediction_df = pd.DataFrame(df.groupby(['Cliente_ID', 'Producto_ID', 'Semana'])[['Venta_uni_hoy', 'Venta_hoy', 'Dev_uni_proxima',
@@ -218,73 +224,40 @@ def preprocess(df):
     prediction_df = prediction_df.drop(cols_to_drop_1, axis=1)
     prediction_df = prediction_df.drop(cols_to_drop_2, axis=1)
     #Prepare X_train
-    X_train = np.array(prediction_df.drop(['Demanda_uni_equil'], axis=1))
+    prediction_df = prediction_df[prediction_df.Semana==11]
+    X_test = np.array(prediction_df.drop(['Demanda_uni_equil'], axis=1))
     #Prepare Y_train and take log
-    y_train = np.log1p(prediction_df['Demanda_uni_equil'])
-    return X_train, y_train
+    y_test = None
+    return X_test, y_test
 
-def train_model(X_train, y_train):
-    '''train model'''
-    model_2_week = XGBRegressor(base_score=0.5,
-                     booster='gbtree',
-                     colsample_bylevel=1,
-                     colsample_bynode=1,
-                     colsample_bytree=0.8,
-                     eta=0.3,
-                     gamma=0,
-                     importance_type='gain',
-                     learning_rate=0.3, #try smaller values later
-                     max_delta_step=0,
-                     max_depth=5,
-                     min_child_weight=300,
-                     missing=None,
-                     n_estimators=1000,
-                     n_jobs=1,
-                     nthread=None,
-                     objective='reg:linear', # for model_1 & model_2, reg:linear
-                     random_state=0,
-                     reg_alpha=0,
-                     reg_lambda=1,
-                     scale_pos_weight=1,
-                     seed=42,
-                     silent=None,
-                     subsample=0.8,
-                     verbosity=1)
+def convert_to_json_instances(X_test):
+    return X_test.values.tolist()
 
+def predict_json(project, model, instances, version=None):
+    '''call model for prediction'''
+    service = googleapiclient.discovery.build('ml', 'v1') # google api endpoint /ml/v1
+    name = 'projects/{}/models/{}'.format(project, model)
+    response = service.projects().predict(
+        name=name,
+        body={'instances': instances}
+    ).execute()
+    if 'error' in response:
+        raise RuntimeError(response['error'])
+    return response['predictions']
 
-    model_2_week.fit(
-        X_train,
-        y_train,
-        eval_metric=["mae", "rmse"],
-        eval_set=[(X_train, y_train)],
-        verbose=True,
-        early_stopping_rounds = 3)
-    print('model trained')
-    return model_2_week
+# get data
+df_test = get_test_data().head(100) # only predict for first 100 rows
+df_train = get_data()
+# apply preprocess
+X_test, y_test = preprocess(df_test, df_train)
 
-def save_model(model):
-    '''dump model and upload to gcp'''
-    local_model_name = BUCKET_MODEL_DUMP_NAME
-    joblib.dump(model, local_model_name)
+# # convert X_test to json
+# instances = convert_to_json_instances(X_test)
 
-    client = storage.Client().bucket(BUCKET_NAME)
-    storage_location = '{}/{}/{}/{}'.format(
-        BUCKET_MODEL_PATH,
-        BUCKET_MODEL_NAME,
-        BUCKET_MODEL_VERSION,
-        local_model_name)
-    blob = client.blob(storage_location)
-    blob.upload_from_filename(local_model_name)
-    print('model uploaded')
+# # send request and get response
+# results = predict_json(project=PROJECT_ID,
+#     model=BUCKET_MODEL_NAME,
+#     version=BUCKET_MODEL_VERSION,
+#     instances=instances)
 
-# retrieve data
-df = get_data()
-
-# get X and y
-X_train, y_train = preprocess(df)
-
-# retrieve model
-#model = train_model(X_train, y_train)
-
-# dump model and upload to gcp
-#save_model(model)
+# print(results)

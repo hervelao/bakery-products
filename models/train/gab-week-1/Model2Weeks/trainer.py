@@ -284,7 +284,7 @@ df = get_data()
 X_train, y_train = preprocess(df)
 
 # retrieve model
-#model = train_model(X_train, y_train)
+model = train_model(X_train, y_train)
 
 # dump model and upload to gcp
-#save_model(model)
+save_model(model)

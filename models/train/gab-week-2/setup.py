@@ -7,8 +7,8 @@ REQUIRED_PACKAGES = [
     'pandas==0.24.2',
     'scikit-learn==0.20.4']
 
-PACKAGE_NAME='StaticModel'                        # model folder name
-PACKAGE_DESCRIPTION='static prediction model'     # model folder name
+PACKAGE_NAME='Model2Weeks'                        # model folder name
+PACKAGE_DESCRIPTION='xgboost 2 weeks'
 
 setup(name=PACKAGE_NAME,
     version='1.0',
