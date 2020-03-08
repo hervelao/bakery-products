@@ -38,6 +38,14 @@ you will find instructions below
 
 `trainer.py` is required to be provided inside of the package in order to train on gcp
 
+## ruby predition
+
+`Gemfile` contains the gems required for interaction with gcp storage (buckets) and ai platform (prediction)
+
+do not forget that every time you ommit to `bundle install` after editing a `Gemfile`, a TA dies somewhere
+
+`sales_controller.rb` contains everything you need in order to make a prediction from a trained model in gcp
+
 # tasks
 
 ## show project conf
