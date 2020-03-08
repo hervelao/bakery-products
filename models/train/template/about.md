@@ -7,7 +7,7 @@
 
 # usage
 
-1. setup: fill all the variables in `Model/setup.py`
+1. conf: fill all the variables in `Model/conf.py`
 2. train: fill `Model/trainer.py` with the code used in order to train your model
 3. predict: fill `Model/predict.py` with the code used in order to predict with your model
 4. if you feel the need to change the name of the `Model` package, please update:
@@ -25,7 +25,7 @@
 
 # tasks
 
-## show project setup
+## show project conf
 
 ``` zsh
 make                                    # lists all project variables
