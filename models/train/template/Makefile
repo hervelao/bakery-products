@@ -24,6 +24,9 @@ BUCKET_NAME=$(shell     grep "^BUCKET_NAME="     ${CONF_FILE} | cut -d"=" -f2)
 JOB_FOLDER=$(shell      grep "^JOB_FOLDER="      ${CONF_FILE} | cut -d"=" -f2)
 JOB_PREFIX=$(shell      grep "^JOB_PREFIX="      ${CONF_FILE} | cut -d"=" -f2)
 
+# manual extract
+REQUIREMENTS=$(shell awk '/REQUIRED_PACKAGES=\[/,/]/' setup.py)
+
 # tmp variables
 JOB_NAME=${JOB_PREFIX}_$(shell date +'%Y%m%d_%H%M%S')
 
@@ -38,6 +41,7 @@ variables:
 	@echo bucket name: ${BUCKET_NAME}
 	@echo job folder: ${JOB_FOLDER}
 	@echo job prefix: ${JOB_PREFIX}
+	@echo requirements: ${REQUIREMENTS}
 
 # ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^
 #
@@ -48,9 +52,15 @@ variables:
 auth:
 	-@gcloud auth login
 
+
 # define project id
 set_project:
 	-@gcloud config set project ${PROJECT_ID}
+
+# installs locally required packages
+pip_install_reqs:
+	# python req.py "$(awk '/REQUIRED_PACKAGES=\[/,/]/' setup.py)"
+	python req.py "${REQUIREMENTS}"
 
 # train model locally, from gcp bucket data, store trained model on gcp
 run_locally:

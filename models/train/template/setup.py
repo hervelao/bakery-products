@@ -39,10 +39,11 @@ PYTHON_VERSION=3.7
 RUNTIME_VERSION=1.15
 FRAMEWORK="scikit-learn"
 
-REQUIRED_PACKAGES = [
-    'gcsfs==0.6.0',
+REQUIRED_PACKAGES=[
     'google-cloud-storage==1.26.0',
+    'gcsfs==0.6.0',
     'pandas==0.24.2',
+    'scipy==1.2.2',
     'scikit-learn==0.20.4']
 
 # ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^
