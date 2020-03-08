@@ -14,14 +14,25 @@
 - `CONF_FILE` in `Makefile`
 - `from Model.conf` in `setup.py`, `trainer.py` and `predict.py`
 - `PACKAGE_NAME` in `conf.py`
+- and rename the `Model` folder
 
 # how does this work?
 
+## package
+
 `Makefile` allows you to launch several tasks (listed below) in order to setup your local environment and train or predict locally or on gcp
 
-`setup.py` stores the project variables used by gcp in order to setup the gcp environement
-
 `req.py` is used by the `pip_install_reqs` task in order to extract `REQUIRED_PACKAGES` from `Model/conf.py` (using a single file limits the risk that the environment is not the same locally and on gcp)
+
+`setup.py` is used by gcp in order to setup the training environement
+
+## model
+
+`conf.py` stores the variables of the project (package name and entry file, gcp project, model, version, bucket)
+
+`predict.py` can be used outside of the package and is used locally in order to request from gcp a prediction by a trained model
+
+`trainer.py` is required to be provided inside the package in order to train on gcp
 
 # tasks
 
@@ -46,10 +57,6 @@ python -m Model.trainer                 # trains model locally
 make run_locally                        # trains model locally
 ```
 
-## predict locally
-
-makefile task and code TODO
-
 ## train on gcp
 
 ``` zsh
@@ -57,7 +64,3 @@ make auth                               # logins to gcp
 make set_project                        # sets project if for gcp
 make gcp_submit_training                # trains model on gcp
 ```
-
-## predict on gcp
-
-makefile task TODO but the code is ok
