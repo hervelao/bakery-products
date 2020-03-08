@@ -38,6 +38,11 @@ toto:
 	@echo tutu ${TUTU_PROJECT_ID}
 	@echo tete ${TETE_PROJECT_ID}
 
+# ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^
+#
+# actual tasks
+#
+
 # auth to gcp
 auth:
 	-@gcloud auth login
