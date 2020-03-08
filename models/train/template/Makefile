@@ -28,7 +28,7 @@ JOB_NAME=${JOB_PREFIX}_$(shell date +'%Y%m%d_%H%M%S')
 #
 
 TATA_PROJECT_ID=$(shell . ./a.sh)
-TITI_PROJECT_ID=$(shell cat .conf_cat)
+TITI_PROJECT_ID=$(shell tail -n 2 .conf_cat)
 TUTU_PROJECT_ID=$(shell grep "^BUCKET_NAME" .conf)
 TETE_PROJECT_ID=$(shell grep "^BUCKET_NAME=" .conf | cut -d"=" -f2)
 
