@@ -10,7 +10,7 @@
 #
 
 # conf file
-CONF_FILE=setup.py
+CONF_FILE=Model/conf.py
 
 # extract variables
 PACKAGE_NAME=$(shell    grep "^PACKAGE_NAME="    ${CONF_FILE} | cut -d"=" -f2)
@@ -24,11 +24,11 @@ BUCKET_NAME=$(shell     grep "^BUCKET_NAME="     ${CONF_FILE} | cut -d"=" -f2)
 JOB_FOLDER=$(shell      grep "^JOB_FOLDER="      ${CONF_FILE} | cut -d"=" -f2)
 JOB_PREFIX=$(shell      grep "^JOB_PREFIX="      ${CONF_FILE} | cut -d"=" -f2)
 
-# manual extract
-REQUIREMENTS=$(shell awk '/REQUIRED_PACKAGES=\[/,/]/' setup.py)
-
 # tmp variables
 JOB_NAME=${JOB_PREFIX}_$(shell date +'%Y%m%d_%H%M%S')
+
+# manual extract
+REQUIREMENTS=$(shell awk '/REQUIRED_PACKAGES=\[/,/]/' ${CONF_FILE})
 
 variables:
 	@echo package name: ${PACKAGE_NAME}

@@ -6,9 +6,13 @@
 
 # usage
 
-1. setup: fill all the variables in `setup.py`
-2. train: fill YourModel/`trainer.py` with the code of your model
-3. predict: fill YourModel/`predict.py`
+1. setup: fill all the variables in `Model/setup.py`
+2. train: fill `Model/trainer.py` with the code of your model
+3. predict: fill `predict.py`
+4. if you feel the need to change the name of the `Model` package, please update:
+- `CONF_FILE` in `Makefile`
+- `from Model.conf` in `setup.py`, `trainer.py` and `predict.py`
+- `PACKAGE_NAME` in `conf.py`
 
 # how does this work?
 
@@ -16,11 +20,11 @@
 
 `about.md` is this file
 
-`Makefile` allows you to launch several tasks (listed below) in order to setup your local environment and train locally or on gcp
+`Makefile` allows you to launch several tasks (listed below) in order to setup your local environment and train or predict locally or on gcp
 
-`setup.py` stores the project variables (I could not figure out how to load them from a separate file and still have `setup.py` run correctly on gcp) and is used by gcp in order to setup the gcp environement
+`setup.py` stores the project variables is used by gcp in order to setup the gcp environement
 
-`req.py` is used by the `pip_install_reqs` task in order to extract `REQUIRED_PACKAGES` from `setup.py` (using a single files limits the risk that the environment is not the same locally and on gcp)
+`req.py` is used by the `pip_install_reqs` task in order to extract `REQUIRED_PACKAGES` from `Model/conf.py` (using a single files limits the risk that the environment is not the same locally and on gcp)
 
 # tasks
 
@@ -45,6 +49,10 @@ python -m StaticModel.trainer           # trains model locally
 make run_locally                        # trains model locally
 ```
 
+## predict locally
+
+makefile task and code TODO
+
 ## train on gcp
 
 ``` zsh
@@ -52,3 +60,7 @@ make auth                               # logins to gcp
 make set_project                        # sets project if for gcp
 make gcp_submit_training                # trains model on gcp
 ```
+
+## predict on gcp
+
+makefile task TODO but the code is here

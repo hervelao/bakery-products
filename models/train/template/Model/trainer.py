@@ -1,24 +1,13 @@
-import os
-import datetime
-
 import numpy as np
 import pandas as pd
 
 from google.cloud import storage
 
 from sklearn.externals import joblib
+
 from sklearn.linear_model import LinearRegression
 
-PROJECT_ID='le-wagon-data-grupo-bimbo'            # gcp project id
-BUCKET_NAME='wagon-data-grupo-bimbo-sales'        # gcp bucket name
-
-BUCKET_DATA_PATH='data'                           # data folder
-BUCKET_DATA_TRAIN_PATH='data/train_100k.csv'      # train csv path
-
-BUCKET_MODEL_PATH='models'                        # models folder
-BUCKET_MODEL_NAME='static_baseline_fixed_response_4'        # model name
-BUCKET_MODEL_VERSION='v_1'                        # will store model.joblib
-BUCKET_MODEL_DUMP_NAME='model.joblib'             # required dump name (do not change this)
+from Model.conf import *
 
 def get_data():
     '''retrieve train data from bucket'''
@@ -26,7 +15,7 @@ def get_data():
     df = pd.read_csv("gs://{}/{}".format(
             BUCKET_NAME,
             BUCKET_DATA_TRAIN_PATH),
-        nrows=1000)
+        nrows=1_000)
     return df
 
 def preprocess(df):
