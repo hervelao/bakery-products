@@ -19,6 +19,7 @@ PACKAGE_DESCRIPTION="static prediction model"
 
 # file name
 FILENAME="trainer"
+PRED_FILENAME="predict"
 
 # ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^
 #

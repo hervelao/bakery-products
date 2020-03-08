@@ -15,6 +15,7 @@ CONF_FILE=Model/conf.py
 # extract variables
 PACKAGE_NAME=$(shell    grep "^PACKAGE_NAME="    ${CONF_FILE} | cut -d"=" -f2)
 FILENAME=$(shell        grep "^FILENAME="        ${CONF_FILE} | cut -d"=" -f2)
+PRED_FILENAME=$(shell   grep "^PRED_FILENAME="   ${CONF_FILE} | cut -d"=" -f2)
 PROJECT_ID=$(shell      grep "^PROJECT_ID="      ${CONF_FILE} | cut -d"=" -f2)
 REGION=$(shell          grep "^REGION="          ${CONF_FILE} | cut -d"=" -f2)
 PYTHON_VERSION=$(shell  grep "^PYTHON_VERSION="  ${CONF_FILE} | cut -d"=" -f2)
@@ -33,6 +34,7 @@ REQUIREMENTS=$(shell awk '/REQUIRED_PACKAGES=\[/,/]/' ${CONF_FILE})
 variables:
 	@echo package name: ${PACKAGE_NAME}
 	@echo filename: ${FILENAME}
+	@echo pred filename: ${PRED_FILENAME}
 	@echo project id: ${PROJECT_ID}
 	@echo region: ${REGION}
 	@echo python version: ${PYTHON_VERSION}
@@ -75,3 +77,7 @@ gcp_submit_training:
 		--python-version=${PYTHON_VERSION} \
 		--runtime-version=${RUNTIME_VERSION} \
 		--stream-logs
+
+# ask gcp for pred
+pred_from_gcp:
+	@python -m ${PACKAGE_NAME}.${PRED_FILENAME}

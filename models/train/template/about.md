@@ -20,7 +20,7 @@
 
 ## package
 
-`Makefile` allows you to launch several tasks (listed below) in order to setup your local environment and train locally or on gcp
+`Makefile` allows you to launch several tasks (listed below) in order to setup your local environment, train locally or on gcp, and make a prediction using a trained model on gcp
 
 `req.py` is used by the `pip_install_reqs` task in order to extract `REQUIRED_PACKAGES` from `Model/conf.py` (using a single file limits the risk that the environment is not the same locally and on gcp)
 
@@ -61,7 +61,7 @@ make run_locally                        # trains model locally
 
 ``` zsh
 make auth                               # logins to gcp
-make set_project                        # sets project if for gcp
+make set_project                        # sets gcp project
 make gcp_submit_training                # trains model on gcp
 ```
 
@@ -69,4 +69,6 @@ make gcp_submit_training                # trains model on gcp
 
 ``` zsh
 python Model/predict.py                 # asks gcp for a prediction
+python -m Model.predict                 # asks gcp for a prediction
+make pred_from_gcp                      # asks gcp for a prediction
 ```
