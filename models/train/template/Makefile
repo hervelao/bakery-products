@@ -41,6 +41,7 @@ variables:
 	@echo bucket name: ${BUCKET_NAME}
 	@echo job folder: ${JOB_FOLDER}
 	@echo job prefix: ${JOB_PREFIX}
+	@echo job name: ${JOB_NAME}
 	@echo requirements: ${REQUIREMENTS}
 
 # ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^
@@ -59,7 +60,6 @@ set_project:
 
 # installs locally required packages
 pip_install_reqs:
-	# python req.py "$(awk '/REQUIRED_PACKAGES=\[/,/]/' setup.py)"
 	python req.py "${REQUIREMENTS}"
 
 # train model locally, from gcp bucket data, store trained model on gcp
