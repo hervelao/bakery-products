@@ -29,6 +29,18 @@ FRAMEWORK=scikit-learn
 #
 # my, my, is this not a nice comment
 #
+# $(source .conf)
+# AAA=$(@. ./a.sh)
+TATA_PROJECT_ID=$(shell . ./a.sh)
+TITI_PROJECT_ID=$(shell cat .conf)
+TUTU_PROJECT_ID=$(shell grep "^TOTO_BUCKET_NAME" .conf)
+TETE_PROJECT_ID=$(shell grep "^TOTO_BUCKET_NAME=" .conf | cut -d"=" -f2)
+
+toto:
+	@echo tata ${TATA_PROJECT_ID}
+	@echo titi ${TITI_PROJECT_ID}
+	@echo tutu ${TUTU_PROJECT_ID}
+	@echo tete ${TETE_PROJECT_ID}
 
 # auth to gcp
 auth:
