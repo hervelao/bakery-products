@@ -2,39 +2,35 @@
 # they add additional spaces in the content of the variables,
 # which generates errors
 
-# gcp project id
-PROJECT_ID=le-wagon-data-grupo-bimbo
-# gcp bucket name
-BUCKET_NAME=wagon-data-grupo-bimbo-sales
+# conf file
+CONF_FILE=.conf
 
-# training folder
-BUCKET_JOB_FOLDER=trainings
-# training job name
-JOB_NAME=static_model_$(shell date +'%Y%m%d_%H%M%S')
+# extract variables
+PACKAGE_NAME=$(shell    grep "^PACKAGE_NAME="    ${CONF_FILE} | cut -d"=" -f2)
+FILENAME=$(shell        grep "^FILENAME="        ${CONF_FILE} | cut -d"=" -f2)
+PROJECT_ID=$(shell      grep "^PROJECT_ID="      ${CONF_FILE} | cut -d"=" -f2)
+REGION=$(shell          grep "^REGION="          ${CONF_FILE} | cut -d"=" -f2)
+PYTHON_VERSION=$(shell  grep "^PYTHON_VERSION="  ${CONF_FILE} | cut -d"=" -f2)
+RUNTIME_VERSION=$(shell grep "^RUNTIME_VERSION=" ${CONF_FILE} | cut -d"=" -f2)
+FRAMEWORK=$(shell       grep "^FRAMEWORK="       ${CONF_FILE} | cut -d"=" -f2)
+BUCKET_NAME=$(shell     grep "^BUCKET_NAME="     ${CONF_FILE} | cut -d"=" -f2)
+JOB_FOLDER=$(shell      grep "^JOB_FOLDER="      ${CONF_FILE} | cut -d"=" -f2)
+JOB_PREFIX=$(shell      grep "^JOB_PREFIX="      ${CONF_FILE} | cut -d"=" -f2)
 
-# package folder name
-PACKAGE_NAME=StaticModel
-# package file namme
-FILENAME=trainer
-
-# gcp training configuration
-REGION=europe-west1
-PYTHON_VERSION=3.7
-RUNTIME_VERSION=1.15
-FRAMEWORK=scikit-learn
+# tmp variables
+JOB_NAME=${JOB_PREFIX}_$(shell date +'%Y%m%d_%H%M%S')
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 #
-# my, my, is this not a nice comment
+# variable extraction tests
 #
-# $(source .conf)
-# AAA=$(@. ./a.sh)
+
 TATA_PROJECT_ID=$(shell . ./a.sh)
-TITI_PROJECT_ID=$(shell cat .conf)
-TUTU_PROJECT_ID=$(shell grep "^TOTO_BUCKET_NAME" .conf)
-TETE_PROJECT_ID=$(shell grep "^TOTO_BUCKET_NAME=" .conf | cut -d"=" -f2)
+TITI_PROJECT_ID=$(shell cat .conf_cat)
+TUTU_PROJECT_ID=$(shell grep "^BUCKET_NAME" .conf)
+TETE_PROJECT_ID=$(shell grep "^BUCKET_NAME=" .conf | cut -d"=" -f2)
 
 toto:
 	@echo tata ${TATA_PROJECT_ID}
@@ -57,10 +53,10 @@ run_locally:
 # train model on gcp, from gcp bucket data, store trained model on gcp
 gcp_submit_training:
 	gcloud ai-platform jobs submit training ${JOB_NAME} \
-		--job-dir "gs://${BUCKET_NAME}/${BUCKET_JOB_FOLDER}" \
+		--job-dir "gs://${BUCKET_NAME}/${JOB_FOLDER}" \
 		--package-path ${PACKAGE_NAME} \
 		--module-name ${PACKAGE_NAME}.${FILENAME} \
+		--region ${REGION} \
 		--python-version=${PYTHON_VERSION} \
 		--runtime-version=${RUNTIME_VERSION} \
-		--region ${REGION} \
 		--stream-logs

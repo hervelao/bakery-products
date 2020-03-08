@@ -1,2 +1,2 @@
 source .conf
-echo $TOTO_PROJECT_ID
+echo $PROJECT_ID
