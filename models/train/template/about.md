@@ -3,7 +3,7 @@
 
 [gcp day 5 correction](https://github.com/lewagon/taxi-fare) contains a working solution with a different file architecture
 
-[gcp day 4 notebook instructions](https://github.com/lewagon/data-challenges/blob/master/05-Production/04-Deploy-to-Production/Challenge/04-Deploy-to-Production-Challenge.ipynb) contains informations required in order to setup gcp account
+[gcp day 4 notebook instructions](https://github.com/lewagon/data-challenges/blob/master/05-Production/04-Deploy-to-Production/Challenge/04-Deploy-to-Production-Challenge.ipynb) contains informations required in order to setup the gcp account
 
 # usage
 
@@ -19,9 +19,9 @@
 
 `Makefile` allows you to launch several tasks (listed below) in order to setup your local environment and train or predict locally or on gcp
 
-`setup.py` stores the project variables is used by gcp in order to setup the gcp environement
+`setup.py` stores the project variables used by gcp in order to setup the gcp environement
 
-`req.py` is used by the `pip_install_reqs` task in order to extract `REQUIRED_PACKAGES` from `Model/conf.py` (using a single files limits the risk that the environment is not the same locally and on gcp)
+`req.py` is used by the `pip_install_reqs` task in order to extract `REQUIRED_PACKAGES` from `Model/conf.py` (using a single file limits the risk that the environment is not the same locally and on gcp)
 
 # tasks
 
@@ -41,8 +41,8 @@ make pip_install_reqs                   # installs locally all requirements
 ## train locally
 
 ``` zsh
-python StaticModel/trainer.py           # trains model locally
-python -m StaticModel.trainer           # trains model locally
+python Model/trainer.py                 # trains model locally
+python -m Model.trainer                 # trains model locally
 make run_locally                        # trains model locally
 ```
 
@@ -60,4 +60,4 @@ make gcp_submit_training                # trains model on gcp
 
 ## predict on gcp
 
-makefile task TODO but the code is here
+makefile task TODO but the code is ok
