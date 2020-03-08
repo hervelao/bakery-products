@@ -57,6 +57,7 @@ BUCKET_NAME="wagon-data-grupo-bimbo-sales"
 # data folder
 BUCKET_DATA_PATH='data'                           # data folder
 BUCKET_DATA_TRAIN_PATH='data/train_100k.csv'      # train csv path
+BUCKET_DATA_TEST_PATH='data/test_10k.csv'         # test csv path
 
 # models folder
 BUCKET_MODEL_PATH='models'                        # models folder

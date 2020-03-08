@@ -2,16 +2,10 @@ import numpy as np
 import pandas as pd
 
 from google.cloud import storage
+
 import googleapiclient.discovery
 
-PROJECT_ID='le-wagon-data-grupo-bimbo'            # gcp project id
-BUCKET_NAME='wagon-data-grupo-bimbo-sales'        # gcp bucket name
-
-BUCKET_DATA_PATH='data'                           # data folder
-BUCKET_DATA_TEST_PATH='data/test_10k.csv'         # test csv path
-
-BUCKET_MODEL_NAME='static_baseline_fixed_response_4'        # model name
-BUCKET_MODEL_VERSION='v_1'                        # will store model.joblib
+from Model.conf import *
 
 def get_test_data():
     '''retrieve test data from bucket'''
@@ -19,7 +13,7 @@ def get_test_data():
     df = pd.read_csv("gs://{}/{}".format(
             BUCKET_NAME,
             BUCKET_DATA_TEST_PATH),
-        nrows=1000)
+        nrows=1_000)
     return df
 
 def preprocess(df):
@@ -27,7 +21,6 @@ def preprocess(df):
     '''preprocess should be identical to the one used on train data'''
     X_test = df[['Agencia_ID']]
     y_test = None
-    # y_test = df['Demanda_uni_equil']
     return X_test, y_test
 
 def convert_to_json_instances(X_test):
@@ -35,6 +28,7 @@ def convert_to_json_instances(X_test):
 
 def predict_json(project, model, instances, version=None):
     '''call model for prediction'''
+    # do not change the ml and v1 parameters, they correspond to the gcp ml api
     service = googleapiclient.discovery.build('ml', 'v1') # google api endpoint /ml/v1
     name = 'projects/{}/models/{}'.format(project, model)
     response = service.projects().predict(
@@ -46,7 +40,7 @@ def predict_json(project, model, instances, version=None):
     return response['predictions']
 
 # get data
-df = get_test_data().head(100) # only predict for first 100 rows
+df = get_test_data().head(100) # only predict for the first 100 rows
 
 # apply preprocess
 X_test, y_test = preprocess(df)
@@ -61,14 +55,3 @@ results = predict_json(project=PROJECT_ID,
     instances=instances)
 
 print(results)
-
-#     id  Semana  Agencia_ID  Canal_ID  Ruta_SAK  Cliente_ID  Producto_ID
-# 0    0      11        4037         1      2209     4639078        35305
-# 1    1      11        2237         1      1226     4705135         1238
-# 2    2      10        2045         1      2831     4549769        32940
-# 3    3      11        1227         1      4448     4717855        43066
-
-# old code sample
-#
-# df["fare_amount"] = results
-# df[["key", "fare_amount"]].to_csv("predictions.csv", index=False)
