@@ -2,8 +2,15 @@
 # they add additional spaces in the content of the variables,
 # which generates errors
 
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+#
+# variables extraction
+#
+
 # conf file
-CONF_FILE=.conf.py
+CONF_FILE=setup.py
 
 # extract variables
 PACKAGE_NAME=$(shell    grep "^PACKAGE_NAME="    ${CONF_FILE} | cut -d"=" -f2)
@@ -20,27 +27,21 @@ JOB_PREFIX=$(shell      grep "^JOB_PREFIX="      ${CONF_FILE} | cut -d"=" -f2)
 # tmp variables
 JOB_NAME=${JOB_PREFIX}_$(shell date +'%Y%m%d_%H%M%S')
 
-#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
-#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
-# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-#
-# variable extraction tests
-#
-
-TATA_PROJECT_ID=$(shell . ./a.sh)
-TITI_PROJECT_ID=$(shell tail -n 2 .conf_cat)
-TUTU_PROJECT_ID=$(shell grep "^BUCKET_NAME" ${CONF_FILE})
-TETE_PROJECT_ID=$(shell grep "^BUCKET_NAME=" ${CONF_FILE} | cut -d"=" -f2)
-
-toto:
-	@echo tata ${TATA_PROJECT_ID}
-	@echo titi ${TITI_PROJECT_ID}
-	@echo tutu ${TUTU_PROJECT_ID}
-	@echo tete ${TETE_PROJECT_ID}
+variables:
+	@echo package name: ${PACKAGE_NAME}
+	@echo filename: ${FILENAME}
+	@echo project id: ${PROJECT_ID}
+	@echo region: ${REGION}
+	@echo python version: ${PYTHON_VERSION}
+	@echo runtime version: ${RUNTIME_VERSION}
+	@echo framework: ${FRAMEWORK}
+	@echo bucket name: ${BUCKET_NAME}
+	@echo job folder: ${JOB_FOLDER}
+	@echo job prefix: ${JOB_PREFIX}
 
 # ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^ ~ ^
 #
-# actual tasks
+# ai tasks
 #
 
 # auth to gcp
