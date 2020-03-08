@@ -79,17 +79,14 @@ make pred_from_gcp                      # asks gcp for a prediction
 
 # gcp setup
 
-## links
-
 [gcp console](https://console.cloud.google.com/home/)
 
 [runtime versions](https://cloud.google.com/ai-platform/training/docs/runtime-version-list)
 
-## gcp services
-
-api & services                handles credentials, service accounts, and keys
-storage                       handles buckets
-ai platform                   handles models, model versions, and jobs
+gcp services:
+- api & services: handles credentials, service accounts, and keys
+- storage: handles buckets
+- ai platform: handles models, model versions, and jobs
 
 ## setup gcp for model training and prediction
 
