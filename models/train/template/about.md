@@ -1,9 +1,9 @@
 
 # sources
 
-[gcp day 5 correction](https://github.com/lewagon/taxi-fare)
+[gcp day 5 correction](https://github.com/lewagon/taxi-fare) contain a working solution with a different file architecture
 
-[day 4 notebook instructions](https://github.com/lewagon/data-challenges/blob/master/05-Production/04-Deploy-to-Production/Challenge/04-Deploy-to-Production-Challenge.ipynb)
+[gcp day 4 notebook instructions](https://github.com/lewagon/data-challenges/blob/master/05-Production/04-Deploy-to-Production/Challenge/04-Deploy-to-Production-Challenge.ipynb) contains informations required in order to setup gcp account
 
 # usage
 
