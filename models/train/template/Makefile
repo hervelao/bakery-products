@@ -3,7 +3,7 @@
 # which generates errors
 
 # conf file
-CONF_FILE=.conf
+CONF_FILE=.conf.py
 
 # extract variables
 PACKAGE_NAME=$(shell    grep "^PACKAGE_NAME="    ${CONF_FILE} | cut -d"=" -f2)
@@ -29,8 +29,8 @@ JOB_NAME=${JOB_PREFIX}_$(shell date +'%Y%m%d_%H%M%S')
 
 TATA_PROJECT_ID=$(shell . ./a.sh)
 TITI_PROJECT_ID=$(shell tail -n 2 .conf_cat)
-TUTU_PROJECT_ID=$(shell grep "^BUCKET_NAME" .conf)
-TETE_PROJECT_ID=$(shell grep "^BUCKET_NAME=" .conf | cut -d"=" -f2)
+TUTU_PROJECT_ID=$(shell grep "^BUCKET_NAME" ${CONF_FILE})
+TETE_PROJECT_ID=$(shell grep "^BUCKET_NAME=" ${CONF_FILE} | cut -d"=" -f2)
 
 toto:
 	@echo tata ${TATA_PROJECT_ID}

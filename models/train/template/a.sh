@@ -1,2 +1,2 @@
-source .conf
+source .conf.py
 echo $PROJECT_ID
