@@ -67,8 +67,6 @@ make gcp_submit_training                # trains model on gcp
 
 ## predict locally
 
-todo
-
-## predict on gcp
-
-todo
+``` zsh
+python Model/predict.py
+```
