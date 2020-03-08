@@ -8,18 +8,14 @@
 # usage
 
 1. setup: fill all the variables in `Model/setup.py`
-2. train: fill `Model/trainer.py` with the code of your model
-3. predict: fill `predict.py`
+2. train: fill `Model/trainer.py` with the code used in order to train your model
+3. predict: fill `Model/predict.py` with the code used in order to predict with your model
 4. if you feel the need to change the name of the `Model` package, please update:
 - `CONF_FILE` in `Makefile`
 - `from Model.conf` in `setup.py`, `trainer.py` and `predict.py`
 - `PACKAGE_NAME` in `conf.py`
 
 # how does this work?
-
-`.gitignore` lists files excluded from git
-
-`about.md` is this file
 
 `Makefile` allows you to launch several tasks (listed below) in order to setup your local environment and train or predict locally or on gcp
 
