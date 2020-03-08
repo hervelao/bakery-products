@@ -53,7 +53,6 @@ variables:
 auth:
 	-@gcloud auth login
 
-
 # define project id
 set_project:
 	-@gcloud config set project ${PROJECT_ID}
@@ -62,11 +61,11 @@ set_project:
 pip_install_reqs:
 	python req.py "${REQUIREMENTS}"
 
-# train model locally, from gcp bucket data, store trained model on gcp
+# train model locally
 run_locally:
 	@python -m ${PACKAGE_NAME}.${FILENAME}
 
-# train model on gcp, from gcp bucket data, store trained model on gcp
+# train model on gcp
 gcp_submit_training:
 	gcloud ai-platform jobs submit training ${JOB_NAME} \
 		--job-dir "gs://${BUCKET_NAME}/${JOB_FOLDER}" \
