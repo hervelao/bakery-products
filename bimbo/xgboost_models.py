@@ -2,7 +2,8 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 from xgboost import XGBRegressor
-import pickle
+# import pickle
+from sklearn.externals import joblib
 
 def build_model(X, y):
     """
@@ -58,17 +59,20 @@ def save_model(model, model_name):
     """
     Save the model using pickle
     """
-    pickle.dump(model, open(f"../serialize-models/{model_name}.pickle.dat", "wb"))
-    print(f"Saved model to: {model_name}.pickle.dat")
+    # pickle.dump(model, open(f"../serialize-models/{model_name}.pickle.dat", "wb"))
+    # print(f"Saved model to: {model_name}.pickle.dat")
+    joblib.dump(model, f"../serialize-models/{model_name}.joblib.dat")
+    print(f"Saved model to: {pima}.joblib.dat")
 
 def load_model(model_name):
     """
     Load the model using pickle
     """
-    loaded_model = pickle.load(open(f"../serialize-models/{model_name}.pickle.dat", "rb"))
-    print("Loaded model from: pima.pickle.dat")
+    # loaded_model = pickle.load(open(f"../serialize-models/{model_name}.pickle.dat", "rb"))
+    # print(f"Loaded model from: {model_name}.pickle.dat")
+    loaded_model = joblib.load(f"{model_name}.joblib.dat")
+    print(f"Loaded model from: {model_name}.joblib.dat")
     return loaded_model
-
 
 def submit_model(processed_test_df, model, csv_name):
     """
