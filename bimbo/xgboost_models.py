@@ -26,7 +26,7 @@ def build_model(X, y):
                  eta=0.3,
                  gamma=0,
                  importance_type='gain',
-                 learning_rate=0.1, #for model_1 & model_2, 0.1
+                 learning_rate=0.3, #for model_1 & model_2, 0.1
                  max_delta_step=0,
                  max_depth=7,
                  min_child_weight=300,
@@ -34,7 +34,7 @@ def build_model(X, y):
                  n_estimators=1000,
                  n_jobs=1,
                  nthread=None,
-                 objective='reg:squarederror', # for model_1 & model_2, reg:linear
+                 objective='reg:linear',
                  random_state=0,
                  reg_alpha=0,
                  reg_lambda=1,
@@ -62,7 +62,7 @@ def save_model(model, model_name):
     # pickle.dump(model, open(f"../serialize-models/{model_name}.pickle.dat", "wb"))
     # print(f"Saved model to: {model_name}.pickle.dat")
     joblib.dump(model, f"../serialize-models/{model_name}.joblib.dat")
-    print(f"Saved model to: {pima}.joblib.dat")
+    print(f"Saved model to: {model_name}.joblib.dat")
 
 def load_model(model_name):
     """
@@ -70,7 +70,7 @@ def load_model(model_name):
     """
     # loaded_model = pickle.load(open(f"../serialize-models/{model_name}.pickle.dat", "rb"))
     # print(f"Loaded model from: {model_name}.pickle.dat")
-    loaded_model = joblib.load(f"{model_name}.joblib.dat")
+    loaded_model = joblib.load(f"../serialize-models/{model_name}.joblib.dat")
     print(f"Loaded model from: {model_name}.joblib.dat")
     return loaded_model
 
