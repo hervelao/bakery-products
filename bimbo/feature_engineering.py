@@ -127,7 +127,7 @@ def change_type_to_categ2(df_):
     Change the features [Agencia_ID' ,'Canal_ID' ,'Ruta_SAK' ,'Cliente_ID' ,
     'Producto_ID', 'short_name', 'brand', 'Town', 'State'] into categories
     """
-    colname = ['Agencia_ID', 'Canal_ID', 'Ruta_SAK', 'Cliente_ID' ,'Producto_ID', 'short_name', 'brand','Town', 'State']
+    colname = ['Agencia_ID', 'Canal_ID', 'Ruta_SAK', 'Cliente_ID' ,'Producto_ID', 'short_name', 'brand', 'Town', 'State']
     for col in colname:
         df_[col] = df_[col].astype('category')
 
@@ -167,10 +167,10 @@ def feature_engineering2(df_):
     # Add mean target value per client and product cluster
     mean_due_cli_clu = df_.groupby(['Cliente_ID','short_name'], as_index=False)['log_demanda_uni_equil'].agg({'mean_due_cli_clu':np.mean})
 
-    # Add max target value per client and product
+    # # Add max target value per client and product
     max_due_prod_cli = df_.groupby(['Producto_ID','Cliente_ID'], as_index=False)['log_demanda_uni_equil'].agg({'max_due_prod_cli':np.max})
 
-    # List of 13 new features, but more can be created
+    # List of 15 new features, but more can be created
     temp = [mean_due_agencia,
             mean_due_canal,
             mean_due_ruta,
