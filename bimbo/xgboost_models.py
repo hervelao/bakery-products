@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 from xgboost import XGBRegressor
-# import pickle
+import pickle
 from sklearn.externals import joblib
 
 def build_model(X, y):
@@ -18,31 +18,29 @@ def build_model(X, y):
     X_val.drop(['Demanda_uni_equil'], axis=1, inplace=True)
 
     model = XGBRegressor(
-                 base_score=0.5,
-                 booster='gbtree',
-                 colsample_bylevel=1,
-                 colsample_bynode=1,
-                 colsample_bytree=0.8,
-                 eta=0.3,
-                 gamma=0,
+                 n_estimators=1000, # Number of gradient boosted trees. Equivalent to number of boosting rounds.
+                 max_depth=7, # Maximum tree depth for base learners.
+                 learning_rate=0.3, #for model_1 & model_2, 0.1 Boosting learning rate (xgb’s “eta”)
+                 verbosity=1, # The degree of verbosity. Valid values are 0 (silent) - 3 (debug).
+                 objective='reg:linear', # Specify the learning task and the corresponding learning objective or a custom objective function to be used
+                 booster='gbtree', # Specify which booster to use: gbtree, gblinear or dart.
+                 n_jobs=-1, # check the nb of core (system_profiler SPHardwareDataType)
+                 # because we need to set the parameter n_jobs equal to the number of cores on your machine
+                 # it can be set to -1 to use all of the CPU cores on your system, which is good practice.
+                 gamma=0, # Minimum loss reduction required to make a further partition on a leaf node of the tree.
+                 min_child_weight=300, # Minimum sum of instance weight(hessian) needed in a child.
+                 max_delta_step=0, # Maximum delta step we allow each tree’s weight estimation to be.
+                 subsample=0.8, # Subsample ratio of the training instance.
+                 colsample_bytree=0.8, # Subsample ratio of columns when constructing each tree.
+                 colsample_bylevel=1, # Subsample ratio of columns for each level.
+                 colsample_bynode=1, # Subsample ratio of columns for each split.
+                 reg_alpha=0, # L1 regularization term on weights
+                 reg_lambda=1, # L2 regularization term on weights
+                 scale_pos_weight=1, # Balancing of positive and negative weights.
+                 base_score=0.5, # The initial prediction score of all instances, global bias.
                  importance_type='gain',
-                 learning_rate=0.3, #for model_1 & model_2, 0.1
-                 max_delta_step=0,
-                 max_depth=7,
-                 min_child_weight=300,
-                 missing=None,
-                 n_estimators=1000,
-                 n_jobs=1,
-                 nthread=None,
-                 objective='reg:linear',
-                 random_state=0,
-                 reg_alpha=0,
-                 reg_lambda=1,
-                 scale_pos_weight=1,
-                 seed=42,
-                 silent=None,
-                 subsample=0.8,
-                 verbosity=1
+                 missing=None, # Value in the data which needs to be present as a missing value.
+                 random_state=0 # Random number seed.
              )
 
     model.fit(
@@ -57,16 +55,16 @@ def build_model(X, y):
 
 def save_model(model, model_name):
     """
-    Save the model using pickle
+    Save the model using joblib
     """
-    # pickle.dump(model, open(f"../serialize-models/{model_name}.pickle.dat", "wb"))
-    # print(f"Saved model to: {model_name}.pickle.dat")
+    pickle.dump(model, open(f"../serialize-models/{model_name}.pickle.dat", "wb"))
+    print(f"Saved model to: {model_name}.pickle.dat")
     joblib.dump(model, f"../serialize-models/{model_name}.joblib.dat")
     print(f"Saved model to: {model_name}.joblib.dat")
 
 def load_model(model_name):
     """
-    Load the model using pickle
+    Load the model using joblib
     """
     # loaded_model = pickle.load(open(f"../serialize-models/{model_name}.pickle.dat", "rb"))
     # print(f"Loaded model from: {model_name}.pickle.dat")
