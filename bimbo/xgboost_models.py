@@ -2,7 +2,8 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 from xgboost import XGBRegressor
-import pickle
+# import pickle
+from sklearn.externals import joblib
 
 def build_model(X, y):
     """
@@ -25,7 +26,7 @@ def build_model(X, y):
                  eta=0.3,
                  gamma=0,
                  importance_type='gain',
-                 learning_rate=0.1, #for model_1 & model_2, 0.1
+                 learning_rate=0.3, #for model_1 & model_2, 0.1
                  max_delta_step=0,
                  max_depth=7,
                  min_child_weight=300,
@@ -33,7 +34,7 @@ def build_model(X, y):
                  n_estimators=1000,
                  n_jobs=1,
                  nthread=None,
-                 objective='reg:squarederror', # for model_1 & model_2, reg:linear
+                 objective='reg:linear',
                  random_state=0,
                  reg_alpha=0,
                  reg_lambda=1,
@@ -58,17 +59,20 @@ def save_model(model, model_name):
     """
     Save the model using pickle
     """
-    pickle.dump(model, open(f"../serialize-models/{model_name}.pickle.dat", "wb"))
-    print(f"Saved model to: {model_name}.pickle.dat")
+    # pickle.dump(model, open(f"../serialize-models/{model_name}.pickle.dat", "wb"))
+    # print(f"Saved model to: {model_name}.pickle.dat")
+    joblib.dump(model, f"../serialize-models/{model_name}.joblib.dat")
+    print(f"Saved model to: {model_name}.joblib.dat")
 
 def load_model(model_name):
     """
     Load the model using pickle
     """
-    loaded_model = pickle.load(open(f"../serialize-models/{model_name}.pickle.dat", "rb"))
-    print("Loaded model from: pima.pickle.dat")
+    # loaded_model = pickle.load(open(f"../serialize-models/{model_name}.pickle.dat", "rb"))
+    # print(f"Loaded model from: {model_name}.pickle.dat")
+    loaded_model = joblib.load(f"../serialize-models/{model_name}.joblib.dat")
+    print(f"Loaded model from: {model_name}.joblib.dat")
     return loaded_model
-
 
 def submit_model(processed_test_df, model, csv_name):
     """
