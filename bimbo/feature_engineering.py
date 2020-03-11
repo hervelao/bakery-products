@@ -1,9 +1,15 @@
 import numpy as np
 import pandas as pd
+from itertools import combinations # let's be greedy and create all the combinations possible
+
+def get_all_combinations(my_list_of_cat_features):
+    output = sum([list(map(list, combinations(my_list_of_cat_features, i))) for i in range(len(input) + 1)], [])
+    return output
+
 
 def change_type_to_categ(df_):
     """
-    Change the features [Agencia_ID' ,'Canal_ID' ,'Ruta_SAK' ,'Cliente_ID' ,
+    Change the features ['Agencia_ID' ,'Canal_ID' ,'Ruta_SAK' ,'Cliente_ID' ,
     'Producto_ID'] into categories
     """
     colname = ['Agencia_ID', 'Canal_ID', 'Ruta_SAK', 'Cliente_ID' ,'Producto_ID']
